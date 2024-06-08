@@ -419,7 +419,7 @@ const PostDetails = () => {
               </span>
             </div>
 
-            <div className="flex justify-center px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
+            <div onClick={repostedUser} className="flex justify-center cursor-pointer px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
             <span className="text-black font-bold">
               {repostCount}{" "}
               <span className="text-gray-500 font-normal">Reposts</span>
