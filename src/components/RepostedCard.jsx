@@ -31,6 +31,15 @@ import RepostButton from "./RepostButton";
 const RepostCard = ({ data }) => {
   const base = useSelector((state) => state.userSlice.base_url);
   const my = useSelector((state) => state.userSlice.user);
+  const [liked, setLiked] = useState(false);
+  const [repostedNow, setRepostedNow] = useState(false);
+  const [options, setOptions] = useState(false);
+  const [likeVal, setLikeVal] = useState(data?.likes?.length);
+  const [reposted, setReposted] = useState(false);
+  const [date, setDate] = useState(moment(data?.date).fromNow());
+  const [hide, setHide] = useState(false);
+  const [repostCount, setRepostCount] = useState(data?.reposted?.length);
+  const [lightbox, setLightBox] = useState(false);
 
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -63,24 +72,13 @@ const RepostCard = ({ data }) => {
     };
   }, []);
 
-  const [liked, setLiked] = useState(false);
-  const [repostedNow, setRepostedNow] = useState(false);
-  const [options, setOptions] = useState(false);
-  const [likeVal, setLikeVal] = useState(data?.likes?.length);
-  const [reposted, setReposted] = useState(false);
-  const [date, setDate] = useState(moment(data?.date).fromNow());
-  const [hide, setHide] = useState(false);
-  const [repostCount, setRepostCount] = useState(data?.reposted?.length);
-  const [lightbox, setLightBox] = useState(false);
-  const [repostOptions, setRepostOptions] = useState(false);
-  const [undoOptions, setUndoOptions] = useState(false);
-
   useEffect(() => {
     if (data?.reposted?.includes(localStorage.getItem("id"))) {
       setReposted(true);
     } else {
       setReposted(false);
     }
+
   }, []);
 
   useEffect(() => {
@@ -89,7 +87,16 @@ const RepostCard = ({ data }) => {
     } else {
       setLiked(false);
     }
+    
+    setReposted(data?.reposted?.includes(my?._id));
+    setLikeVal(data?.likes?.length || 0);
+    setRepostCount(data?.reposted?.length || 0);
   }, []);
+
+  const updateRepostCount = (count) => {
+    setRepostCount(count);
+  };
+
 
   const addLike = () => {
     setLikeVal(likeVal + 1);
@@ -303,7 +310,10 @@ const RepostCard = ({ data }) => {
                 </div>
               </Link>
 
-              <RepostButton data={data} />
+              <div className="flex rounded-full justify-center text-sm bg-[#f4f6fc] text-gray-500 items-center gap-2 max-sm:gap-1">
+                <RepostButton data={data} updateRepostCount={updateRepostCount} />
+                <div className="text-xs max-sm:text-[10px]">{repostCount}</div> {/* Display Repost count */}
+              </div>
 
 
               <div className="flex rounded-full justify-center bg-[#f4f6fc] px-4 text-sm text-gray-500 items-center gap-2 max-sm:gap-1">
