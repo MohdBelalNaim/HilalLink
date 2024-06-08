@@ -31,6 +31,7 @@ import LikeModal from "./LikeModal";
 import RepostModal from "./Repostmodal";
 import moment from "moment";
 import { MdBlock } from "react-icons/md";
+import RepostButton from "@/components/RepostButton";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -44,21 +45,22 @@ const PostDetails = () => {
   const [likeVal, setLikeVal] = useState(0);
   const [reposted, setReposted] = useState(false);
   const [repostCount, setRepostCount] = useState(0);
-  const [repostedNow, setRepostedNow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [likes, setLikes] = useState([]);
   const [repostUser, setRepostUser] = useState([]);
   const [isModalOn, setIsModalOn] = useState(false);
-  const [repostOptions, setRepostOptions] = useState(false);
-  const [undoOptions, setUndoOptions] = useState(false);
   const [date, setDate] = useState(moment(details?.date).fromNow());
   const [options, setOptions] = useState(false);
+  const [check, setCheck] = useState(false);
+
 
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
-  const repostButtonRef = useRef(null);
-  const repostmenuRef = useRef(null);
   const navigate = useNavigate();
+
+  const updateRepostCount = (count) => {
+    setRepostCount(count);
+  };
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,15 +72,6 @@ const PostDetails = () => {
       ) {
         setOptions(false);
       }
-      if (
-        repostmenuRef.current &&
-        !repostmenuRef.current.contains(event.target) &&
-        repostButtonRef.current &&
-        !repostButtonRef.current.contains(event.target)
-      ) {
-        setRepostOptions(false);
-        setUndoOptions(false);
-      }
     };
     document.addEventListener("click", handleClickOutside, true);
     return () => {
@@ -86,46 +79,6 @@ const PostDetails = () => {
     };
   }, []);
 
-  const removeRepost = (id) => {
-    fetch(`${base}/repost/delete/${id}`, {
-      method: "POST",
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setReposted(false);
-          setRepostedNow(false);
-          setRepostCount((prev) => prev - 1);
-          toast.success(data.success);
-        } else {
-          toast.error(data.error);
-        }
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
-    setUndoOptions(false);
-  };
-
-  const repost = (id) => {
-    setRepostCount((prev) => prev + 1);
-    setReposted(true);
-    setRepostedNow(true);
-    fetch(`${base}/repost/${id}`, {
-      method: "POST",
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .catch((error) => {
-        toast.error(error);
-      });
-    setRepostOptions(false);
-  };
 
   useEffect(() => {
     if (details?.likes.some((like) => like._id === my?._id)) {
@@ -167,16 +120,28 @@ const PostDetails = () => {
   };
 
   const getDetails = () => {
-    setLoading(true);
-    fetch(`${base}/post/post-by-id/${id}`, {
-      method: "POST",
+  setLoading(true);
+  fetch(`${base}/post/post-by-id/${id}`, {
+    method: "POST",
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch post details");
+      }
+      return res.json();
     })
-      .then((res) => res.json())
-      .then((data) => {
-        setDetails(data?.data);
-        setLoading(false);
-      });
-  };
+    .then((data) => {
+      setDetails(data?.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      toast.error(error.message);
+      console.error("Error fetching post details:", error);
+      setLoading(false);
+    });
+};
+
+
 
   const addLike = () => {
     setLiked(true);
@@ -256,7 +221,27 @@ const PostDetails = () => {
   useEffect(() => {
     viewUpdate();
     getDetails();
+    checkPost();
   }, []);
+
+  const checkPost = () => {
+    fetch(`${base}/post/check-post/${id}`, {
+      method: "POST",
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if(data.success){
+          setCheck(data.success)
+        }
+      })
+      .catch((err) => {
+        toast.error("Something went wrong!");
+        console.log(err);
+      });
+  }
 
   const Like = () => {
     setIsModalOpen(true);
@@ -434,15 +419,12 @@ const PostDetails = () => {
               </span>
             </div>
 
-            <div
-              className="flex justify-center px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0"
-              onClick={repostedUser}
-            >
-              <span className="text-black font-bold">
-                {repostCount}{" "}
-                <span className="text-gray-500 font-normal">Reposts</span>
-              </span>
-            </div>
+            <div className="flex justify-center px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
+            <span className="text-black font-bold">
+              {repostCount}{" "}
+              <span className="text-gray-500 font-normal">Reposts</span>
+            </span>
+          </div>
 
             <div className="flex justify-center px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
               <span className="text-black font-bold">
@@ -478,23 +460,8 @@ const PostDetails = () => {
               </div>
             </Link>
 
-            {reposted ? (
-              <div
-                ref={repostButtonRef}
-                onClick={() => setUndoOptions(!undoOptions)}
-                className="flex rounded-full justify-center text-sm bg-[#f4f6fc] px-4 text-green-500 items-center gap-2 max-sm:gap-1 cursor-pointer"
-              >
-                <BsRepeat size={18} />
-              </div>
-            ) : (
-              <div
-                ref={repostButtonRef}
-                onClick={() => setRepostOptions(!repostOptions)}
-                className="flex rounded-full justify-center text-sm bg-[#f4f6fc] px-4 text-gray-500 items-center gap-2 max-sm:gap-1 cursor-pointer"
-              >
-                <BsRepeat size={18} />
-              </div>
-            )}
+            {details && <RepostButton data={details} updateRepostCount={updateRepostCount}/>}
+
             <div className="bg-[#f4f6fc] rounded-full py-2 flex justify-center items-center">
               <RWebShare
                 data={{
@@ -538,7 +505,7 @@ const PostDetails = () => {
           {details?.comments?.length > 0 ? (
             details?.comments.map((item, index) => {
               return (
-                <CommentCard id={id} data={item} index={index} key={index} />
+                <CommentCard id={id} data={item} index={index} key={index} check={check}/>
               );
             })
           ) : (
