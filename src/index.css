@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  background-color: #d9d9d9;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+.bg-primary {
+  background-color: dodgerblue;
+  color: white;
+}
+p {
+  margin: initial;
+  margin-bottom: 10px;
+}
+.primary {
+  color: dodgerblue;
+}
+.border-gap {
+  box-shadow: 0 0 0 10px #f3f5f6 inset;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.border-primary {
+  border: 1px solid dodgerblue;
+}
+
+.active-menu {
+  border-bottom: 4px solid dodgerblue;
+}
+
+.glass {
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4.5px);
+  -webkit-backdrop-filter: blur(4.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.comment-mobile {
+  display: none;
+}
+.card-bottom {
+  border-radius: 0px 0px 6px 6px;
+}
+@media only screen and (max-width: 600px) {
+  .comment-mobile {
+    display: flex;
+  }
+}
+.gradient-bg {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+.gradient-card {
+  background: linear-gradient(to bottom, #b97bf5 0%, #6c23aa 100%);
+}
