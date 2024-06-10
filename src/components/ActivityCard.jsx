@@ -35,56 +35,37 @@ const ActivityCard = ({ index, data, text }) => {
   const [reposted, setReposted] = useState(data?.reposted?.includes(my?._id));
   const [repostedNow, setRepostedNow] = useState(false);
   const [repostCount, setRepostCount] = useState(data?.reposted?.length);
-  const [repostOptions, setRepostOptions] = useState(false);
-  const [undoOptions, setUndoOptions] = useState(false);
 
 
-  useEffect(() => {
-    if (data?.reposted?.includes(localStorage.getItem("id"))) {
-      setReposted(true);
-    } else {
-      setReposted(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (data?.reposted?.includes(localStorage.getItem("id"))) {
+  //     setReposted(true);
+  //   } else {
+  //     setReposted(false);
+  //   }
+  // }, []);
 
-  const removeRepost = (id) => {
-    setReposted(false);
-    setRepostedNow(false);
-    setRepostCount(repostCount - 1);
-    fetch(`${base}/repost/delete/${id}`, {
-      method: "POST",
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success(data.success);
-        }
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
-    setUndoOptions(false);
-  };
-
-  const repost = (id) => {
-    setReposted(true);
-    setRepostedNow(true);
-    setRepostCount(repostCount + 1);
-    fetch(`${base}/repost/${id}`, {
-      method: "POST",
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .catch((error) => {
-        toast.error(error);
-      });
-    setRepostOptions(false);
-  };
+  // const removeRepost = (id) => {
+  //   setReposted(false);
+  //   setRepostedNow(false);
+  //   setRepostCount(repostCount - 1);
+  //   fetch(`${base}/repost/delete/${id}`, {
+  //     method: "POST",
+  //     headers: {
+  //       authorization: "Bearer " + localStorage.getItem("token"),
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.success) {
+  //         toast.success(data.success);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error);
+  //     });
+  //   setUndoOptions(false);
+  // };
 
   function addLike() {
     setLiked(true);
@@ -159,12 +140,13 @@ const ActivityCard = ({ index, data, text }) => {
             >
               {data?.user?._id == my?._id ? (
                 <>
-                  <div
+                  {/* <div
                     className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
                     onClick={() => removeRepost(data?.original_postId)}
                   >
                     <BsTrash /> Undo repost
-                  </div>
+                  </div> */}
+
                   <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
                     <BsShare /> Share post
                   </div>
@@ -244,46 +226,6 @@ const ActivityCard = ({ index, data, text }) => {
         
         <div className="bg-white p-3 card-bottom">
             <div className="grid grid-cols-[1fr,1fr,1fr,1fr,0.5fr] gap-3 max-sm:gap-1 ">
-              {repostOptions && (
-                <div
-                  className="border bg-white absolute left-[250px] max-sm:left-[130px] max-sm:top-25 top-30 shadow overflow-hidden z-[999999]"
-                  style={{ borderRadius: "6px" }}
-                >
-                  <div
-                    onClick={() => repost(data?._id)}
-                    className="cursor-pointer hover:bg-gray-100 flex items-center gap-2 text-xs p-2 border-b"
-                  >
-                    <BsRepeat /> Repost
-                  </div>
-                  <div
-                    onClick={() => setRepostOptions(false)}
-                    className="cursor-pointer hover:bg-gray-100 flex items-center gap-2 text-xs p-2"
-                  >
-                    <BsX /> Cancel
-                  </div>
-                </div>
-              )}
-
-              {undoOptions && (
-                <div
-                  className="border bg-white absolute left-[250px] max-sm:left-[130px] max-sm:top-25 shadow overflow-hidden z-[99]"
-                  style={{ borderRadius: "6px" }}
-                >
-                  <div
-                    onClick={() => removeRepost(data?.original_postId)}
-                    className="cursor-pointer hover:bg-gray-100 text-green-500 flex items-center gap-2 text-xs p-2 border-b"
-                  >
-                    <BsRepeat /> Undo repost
-                  </div>
-                  <div
-                    onClick={() => setUndoOptions(false)}
-                    className="cursor-pointer hover:bg-gray-100 flex items-center gap-2 text-xs p-2"
-                  >
-                    <BsX /> Cancel
-                  </div>
-                </div>
-              )}
-
               {liked ? (
                 <div
                   onClick={removeLike}
@@ -312,27 +254,10 @@ const ActivityCard = ({ index, data, text }) => {
                 </div>
               </Link>
 
-              {reposted ? (
-                <div
-                  onClick={() => setUndoOptions(!undoOptions)}
-                  className="flex rounded-full justify-center text-sm bg-[#f4f6fc] px-4 text-green-500 items-center gap-2 max-sm:gap-1 cursor-pointer"
-                >
-                  <BsRepeat size={18} />
-                  <div className="text-xs max-sm:text-[11px]">
-                    {repostCount}
-                  </div>
-                </div>
-              ) : (
-                <div
-                  onClick={() => setRepostOptions(!repostOptions)}
-                  className="flex rounded-full justify-center text-sm bg-[#f4f6fc] px-4 text-gray-500 items-center gap-2 max-sm:gap-1 cursor-pointer"
-                >
-                  <BsRepeat size={18} />
-                  <div className="text-xs max-sm:text-[11px]">
-                    {repostCount}
-                  </div>
-                </div>
-              )}
+              {/* <div className="flex rounded-full justify-center text-sm bg-[#f4f6fc] text-gray-500 items-center gap-2 max-sm:gap-1">
+                <RepostButton data={data} updateRepostCount={updateRepostCount} />
+                <div className="text-xs max-sm:text-[10px]">{repostCount}</div>
+              </div> */}
 
               <div className="flex rounded-full justify-center bg-[#f4f6fc] px-4 text-sm text-gray-500 items-center gap-2 max-sm:gap-1">
                 <BsEye size={18} />

@@ -58,9 +58,9 @@ const PostDetails = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
 
-  const updateRepostCount = (count) => {
-    setRepostCount(count);
-  };
+  // const updateRepostCount = (count) => {
+  //   setRepostCount(count);
+  // };
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -87,20 +87,20 @@ const PostDetails = () => {
       setLiked(false);
     }
 
-    setReposted(details?.reposted?.includes(my?._id));
+    // setReposted(details?.reposted?.includes(my?._id));
     setLikeVal(details?.likes?.length || 0);
-    setRepostCount(details?.reposted?.length || 0);
+    // setRepostCount(details?.reposted?.length || 0);
     setLikes(details?.likes || []);
-    setRepostUser(details?.reposted || []);
+    // setRepostUser(details?.reposted || []);
   }, [details, my?._id]);
 
-  useEffect(() => {
-    if (details?.reposted?.includes(localStorage.getItem("id"))) {
-      setReposted(true);
-    } else {
-      setReposted(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (details?.reposted?.includes(localStorage.getItem("id"))) {
+  //     setReposted(true);
+  //   } else {
+  //     setReposted(false);
+  //   }
+  // }, []);
 
   const addComment = () => {
     fetch(`${base}/post/add-comment/${details._id}`, {
@@ -251,13 +251,13 @@ const PostDetails = () => {
     setIsModalOpen(false);
   };
 
-  const repostedUser = () => {
-    setIsModalOn(true);
-  };
+  // const repostedUser = () => {
+  //   setIsModalOn(true);
+  // };
 
-  const repostCancel = () => {
-    setIsModalOn(false);
-  };
+  // const repostCancel = () => {
+  //   setIsModalOn(false);
+  // };
 
   useEffect(() => {
     setDate(moment(details?.date).fromNow());
@@ -401,7 +401,7 @@ const PostDetails = () => {
           />
         )}
         <div className="bg-white px-3 p-3 border-b border-t">
-          <div className="grid grid-cols-[1fr,1fr,1fr,1fr] gap-3 max-sm:gap-1 ">
+          <div className="grid grid-cols-[1fr,1fr,1fr] gap-3 max-sm:gap-1 ">
             <div
               onClick={Like}
               className="px-4 py-1.5 flex justify-center text-sm items-center gap-2 max-sm:gap-1 cursor-pointer max-sm:px-0"
@@ -419,12 +419,12 @@ const PostDetails = () => {
               </span>
             </div>
 
-            <div onClick={repostedUser} className="flex justify-center cursor-pointer px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
+            {/* <div onClick={repostedUser} className="flex justify-center cursor-pointer px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
             <span className="text-black font-bold">
               {repostCount}{" "}
               <span className="text-gray-500 font-normal">Reposts</span>
             </span>
-          </div>
+          </div> */}
 
             <div className="flex justify-center px-4 text-sm items-center gap-2 max-sm:gap-1 max-sm:px-0">
               <span className="text-black font-bold">
@@ -437,7 +437,7 @@ const PostDetails = () => {
 
         
         <div className="bg-white px-3 p-3 mt-2 border-b">
-          <div className="grid grid-cols-[1fr,1fr,1fr,1fr] mb-2 gap-3 max-sm:gap-1 ">
+          <div className="grid grid-cols-[1fr,1fr,1fr] mb-2 gap-3 max-sm:gap-1 ">
             {!liked ? (
               <div
                 onClick={addLike}
@@ -454,13 +454,13 @@ const PostDetails = () => {
               </div>
             )}
 
-            <Link to={`/repost-details/${details?._id}`}>
+            <Link to={`/post-details/${details?._id}`}>
               <div className="flex rounded-full justify-center text-sm bg-[#f4f6fc]  py-2 text-gray-500 items-center gap-2 max-sm:gap-1">
                 <BsChat size={18} />
               </div>
             </Link>
 
-            {details && <RepostButton data={details} updateRepostCount={updateRepostCount}/>}
+            {/* {details && <RepostButton data={details} updateRepostCount={updateRepostCount}/>} */}
 
             <div className="bg-[#f4f6fc] rounded-full py-2 flex justify-center items-center">
               <RWebShare
@@ -503,25 +503,21 @@ const PostDetails = () => {
         </div>
         <div className="border-t py-4">
           {details?.comments?.length > 0 ? (
-            details?.comments.map((item, index) => {
+            details.comments.slice().reverse().map((item, index) => {
               return (
                 <CommentCard id={id} data={item} index={index} key={index} check={check}/>
               );
             })
           ) : (
             <div className="font-bold text-center py-24 text-gray-500">
-              {" "}
               No comments yet
             </div>
           )}
         </div>
+
       </div>
       <LikeModal isOpen={isModalOpen} onClose={LikeCancel} likes={likes} />
-      <RepostModal
-        isOpen={isModalOn}
-        onClose={repostCancel}
-        repostUser={repostUser}
-      />
+      {/* <RepostModal isOpen={isModalOn} onClose={repostCancel} repostUser={repostUser} /> */}
     </div>
   );
 };

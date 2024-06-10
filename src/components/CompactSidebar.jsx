@@ -43,7 +43,8 @@ const CompactSidebar = () => {
   const details = useSelector((state) => state.toggleSlice.details);
   const[profile, setProfile] = useState(false)
   const[postDetail, setPostDetail] = useState(false)
-  const[repostDetail, setRepostDetail] = useState(false)
+  const[follower, setFollower] = useState(false);
+  const[following, setFollowing] = useState(false);
 
   const fetchUnreadCount = () => {
     fetch(`${base}/notification/count`, {
@@ -71,6 +72,7 @@ const CompactSidebar = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setUnreadCount(0);
         console.log("All notification read");
       })
       .catch((err) => {
@@ -100,7 +102,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     } else if (pathname === "/explore") {
       setHome(false);
       setExplore(true);
@@ -113,7 +116,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     } else if (pathname === "/settings") {
       setHome(false);
       setExplore(false);
@@ -126,7 +130,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     } else if (pathname === "/search") {
       setHome(false);
       setExplore(false);
@@ -139,7 +144,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     } else if (pathname === "/messages") {
       setHome(false);
       setExplore(false);
@@ -152,7 +158,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     }else if (pathname === "/saved") {
       setHome(false);
       setExplore(false);
@@ -165,7 +172,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     }else if (pathname === "/islam-section") {
       setHome(false);
       setExplore(false);
@@ -178,7 +186,8 @@ const CompactSidebar = () => {
       setMyprofile(false)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     }else if (pathname === "/my-profile") {
       setHome(false);
       setExplore(false);
@@ -191,7 +200,8 @@ const CompactSidebar = () => {
       setMyprofile(true)
       setProfile(false)
       setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     }else if (pathname.startsWith("/profile/")) {
     setHome(false);
     setExplore(false);
@@ -204,7 +214,8 @@ const CompactSidebar = () => {
     setMyprofile(false);
     setProfile(true)
     setPostDetail(false)
-    setRepostDetail(false)
+    setFollower(false)
+    setFollowing(false)
     }else if (pathname.startsWith("/post-details/")) {
     setHome(false);
     setExplore(false);
@@ -217,8 +228,9 @@ const CompactSidebar = () => {
     setMyprofile(false);
     setProfile(false)
     setPostDetail(true)
-    setRepostDetail(false)
-    }else if (pathname.startsWith("/repost-details/")) {
+    setFollower(false)
+    setFollowing(false)
+    }else if (pathname.startsWith("/followers/")) {
     setHome(false);
     setExplore(false);
     setNotifications(false);
@@ -230,7 +242,22 @@ const CompactSidebar = () => {
     setMyprofile(false);
     setProfile(false)
     setPostDetail(false)
-    setRepostDetail(true)
+    setFollower(true)
+    setFollowing(false)
+    }else if (pathname.startsWith("/followings/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(true)
     }else {
       setHome(false);
       setExplore(false);
@@ -242,8 +269,8 @@ const CompactSidebar = () => {
       setIslam(false)
       setMyprofile(false)
       setProfile(false)
-      setPostDetail(false)
-      setRepostDetail(false)
+      setFollower(false)
+      setFollowing(false)
     }
   }, [pathname]);
 
@@ -263,7 +290,8 @@ const CompactSidebar = () => {
     setMyprofile(false)
     setProfile(false)
     setPostDetail(false)
-    setRepostDetail(false)
+    setFollower(false)
+    setFollowing(false)
     setUnreadCount(0);
     NotificationRead();
   };
@@ -289,9 +317,10 @@ const CompactSidebar = () => {
         {saved && <Home notifications={handleNotifications} />}
         {islam && <Home notifications={handleNotifications} />}
         {myprofile && <Home notifications={handleNotifications} />}
-        {profile && <Minibar notifications={handleNotifications} />}
+        {profile && <Home notifications={handleNotifications} />}
         {postDetail && <Minibar notifications={handleNotifications} />}
-        {repostDetail && <Minibar notifications={handleNotifications} />}
+        {follower && <Home notifications={handleNotifications} />}
+        {following && <Home notifications={handleNotifications} />}
       </div>
     </>
   );

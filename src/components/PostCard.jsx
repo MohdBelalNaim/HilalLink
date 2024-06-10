@@ -44,14 +44,14 @@ const PostCard = ({ data }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (data?.reposted?.includes(localStorage.getItem("id"))) {
-      setReposted(true);
-    } else {
-      setReposted(false);
-    }
+  // useEffect(() => {
+  //   if (data?.reposted?.includes(localStorage.getItem("id"))) {
+  //     setReposted(true);
+  //   } else {
+  //     setReposted(false);
+  //   }
 
-  }, []);
+  // }, []);
 
   useEffect(() => {
     if (data?.likes?.includes(localStorage.getItem("id"))) {
@@ -60,14 +60,14 @@ const PostCard = ({ data }) => {
       setLiked(false);
     }
     
-    setReposted(data?.reposted?.includes(my?._id));
+    // setReposted(data?.reposted?.includes(my?._id));
     setLikeVal(data?.likes?.length || 0);
-    setRepostCount(data?.reposted?.length || 0);
+    // setRepostCount(data?.reposted?.length || 0);
   }, []);
 
-  const updateRepostCount = (count) => {
-    setRepostCount(count);
-  };
+  // const updateRepostCount = (count) => {
+  //   setRepostCount(count);
+  // };
 
   const addLike = () => {
     setLikeVal(likeVal + 1);
@@ -99,6 +99,24 @@ const PostCard = ({ data }) => {
       });
   };
 
+  const savePost = () => {
+    fetch(`${base}/post-save/save/${data?._id}`, {
+      method: "POST",
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("Post saved successfully");
+        setOptions(false);
+      })
+      .catch((err) => {
+        toast.error("Something went wrong!");
+        console.log(err);
+      });
+  };
+
   const copyToClipboard = async () => {
     const textToCopy = `${base}/post-details/${data?._id}`;
     try {
@@ -117,6 +135,20 @@ const PostCard = ({ data }) => {
     <>
       <div className={`mb-2 relative ${hide && "hidden"}`}>
         <div className="relative">
+          {lightbox && (
+        <div className="inset-0 fixed glass z-[999] grid place-items-center">
+          <div
+            onClick={() => setLightBox(false)}
+            className="cursor-pointer absolute top-5 right-5 bg-gray-600 text-white rounded-full"
+          >
+            <BsX size={22} />
+          </div>
+          <img
+            src={data?.asset_url}
+            alt=""
+            className="h-[500px] w-[500px] max-sm:h-[250px] max-sm:w-[250px] "
+          />
+        </div>)}
           {options && (
             <div
               ref={menuRef}
@@ -186,8 +218,8 @@ const PostCard = ({ data }) => {
             <img onClick={() => setLightBox(true)} src={data?.asset_url} className="w-full h-full cursor-pointer" alt="Post asset" />
           )}
 
-          <div className="bg-white p-3 card-bottom">
-            <div className="grid grid-cols-[1fr,1fr,1fr,1fr,0.5fr] gap-3 max-sm:gap-1 ">
+          <div className="bg-white p-3 card-bottom relative">
+            <div className="grid grid-cols-[1fr,1fr,1fr,1fr] gap-3 max-sm:gap-1 ">
               {liked ? (
                 <div onClick={removeLike} className="bg-[#f4f6fc] rounded-full justify-center px-4 py-1.5 flex text-sm text-gray-500 items-center gap-2 max-sm:gap-1">
                   <BsHeartFill size={18} className="text-red-500" />
@@ -210,10 +242,10 @@ const PostCard = ({ data }) => {
                 </div>
               </Link>
               
-              <div className="flex rounded-full justify-center text-sm bg-[#f4f6fc] text-gray-500 items-center gap-2 max-sm:gap-1">
+              {/* <div className="flex rounded-full justify-center text-sm bg-[#f4f6fc] text-gray-500 items-center gap-2 max-sm:gap-1">
                 <RepostButton data={data} updateRepostCount={updateRepostCount} />
                 <div className="text-xs max-sm:text-[10px]">{repostCount}</div>
-              </div>
+              </div> */}
 
               <div className="flex rounded-full justify-center bg-[#f4f6fc] px-4 text-sm text-gray-500 items-center gap-2 max-sm:gap-1">
                 <BsEye size={18} />

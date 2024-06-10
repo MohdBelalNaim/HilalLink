@@ -3,32 +3,43 @@ import PeopleCard from "@/components/PeopleCard";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { TailSpin } from "react-loader-spinner";
 
 const Followings = () => {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const [load, setLoad] = useState(false)
   const base = useSelector((state) => state.userSlice.base_url);
   useEffect(() => {
+    setLoad(true)
     fetch(`${base}/user/my-people/${id}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
-        setData(data?.followings);
-        console.log(data);
+        setData(data?.following);
+        setLoad(false)
+        //console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);
   return (
     <div>
-      <CompactSidebar />
       <div className="w-[min(560px,100%)] mx-auto px-3">
-        <div className="text-xl font-bold py-4">All followings</div>
-        <div>  
-          {data?.map((item) => {
-            return <PeopleCard data={item} />;
-          })}
-        </div>
+        <div className="text-xl font-bold p-4">All followings</div>
+        {load ? (
+          <div className="h-[400px] grid place-items-center">
+            <TailSpin height={52} color="dodgerblue" />
+          </div>
+        ) : data?.length > 0 ? (
+          <div>
+            {data.map((item) => (
+              <PeopleCard key={item.email} data={item} />
+            ))}
+          </div>
+        ) : (
+          <p>No followings.</p>
+        )}
       </div>
     </div>
   );
