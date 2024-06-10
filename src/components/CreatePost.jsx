@@ -135,7 +135,7 @@ const CreatePost = () => {
   
 
   return (
-    <div className="inset-0 fixed glass grid place-items-center z-50">
+    <div className="inset-0 fixed glass grid place-items-center z-[99]">
       <div className="w-[min(600px,96%)] bg-white rounded-2xl max-h-full overflow-y-auto">
         <div className="border-b relative text-center primary text-lg p-3 flex items-center justify-center max-sm:text-sm">
           Create a new post{" "}

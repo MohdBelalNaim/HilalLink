@@ -173,7 +173,7 @@ const ChangePassword = () => {
             <input
               type="password"
               {...register("password", { required: true })}
-              className="w-full p-3 border rounded-md"
+              className="w-[40%] p-3 border rounded-md"
               placeholder="New password"
             />
             {errors.password && <p className="text-red-500">New password is required.</p>}
@@ -181,7 +181,7 @@ const ChangePassword = () => {
             <input
               type="password"
               {...register("confirmpassword", { required: true })}
-              className="w-full p-3 border rounded-md"
+              className="w-[40%] p-3 border rounded-md"
               placeholder="Repeat new password"
             />
             {errors.confirmpassword && <p className="text-red-500">Confirm password is required.</p>}

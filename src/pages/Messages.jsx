@@ -32,7 +32,7 @@ export const Messages = () => {
       .then((data) => {
         const filteredConversations = data.filter(
           (message) =>
-            message.from._id === my._id || message.to._id === my._id
+            message.from._id === my?._id || message.to._id === my?._id
         );
         const conversationsMap = new Map();
         filteredConversations.forEach((message) => {
@@ -62,7 +62,7 @@ export const Messages = () => {
             conversations.map((conversation) => (
               <Link
                 to={`/chat/${
-                  conversation.from._id === my._id
+                  conversation.from._id === my?._id
                     ? conversation.to._id
                     : conversation.from._id
                 }`}

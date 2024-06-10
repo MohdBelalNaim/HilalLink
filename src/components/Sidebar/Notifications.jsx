@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { BsPersonAdd } from "react-icons/bs";
+import { BsPersonAdd, BsX } from "react-icons/bs";
 import { FaAngleRight } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import avatar from "../../assets/images/avatar.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RequestCard from "./RequestCard";
-import Minibar from "./Minibar";
 
 const Notifications = () => {
   const base = useSelector((state) => state.userSlice.base_url);
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState(null);
+  const [showNotification, setShowNotification] = useState(false)
 
   const types = {
     Like: "liked your post",
@@ -22,6 +22,7 @@ const Notifications = () => {
   };
 
   const fetchNotifications = () => {
+    setShowNotification(true)
     fetch(`${base}/notification/my`, {
       method: "POST",
       headers: {
@@ -48,9 +49,9 @@ const Notifications = () => {
   };
 
   return (
-    <div className="flex">
-      <Minibar />
-      <div className="w-[390px] overflow-scroll animate__animated animate__fadeIn">
+    
+    <div className="flex bg-white">
+      <div className="w-[360px] overflow-scroll animate__animated animate__fadeIn h-[100dvh]">
         <div className="text-lg p-4 font-bold">Notifications</div>
         <div
           className="flex justify-between px-4 items-center border-b pb-4 cursor-pointer"
@@ -113,7 +114,14 @@ const Notifications = () => {
           )}
         </div>
       </div>
+      <div
+        className="cursor-pointer absolute top-5 right-4 bg-black text-white rounded-full"
+       
+      >
+      <BsX size={22} />
+      </div>
     </div>
+
   );
 };
 

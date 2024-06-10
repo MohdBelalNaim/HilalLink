@@ -26,7 +26,7 @@ const Explore = ({notifications}) => {
 
   return (
     <div className="flex">
-      <Minibar notifications={notifications}/>
+      {/* <Minibar notifications={notifications}/> */}
       <div className="border-r">
         <div className="border-b p-4">
           <div className="flex items-center gap-2 border px-3 py-1.5 rounded-md">

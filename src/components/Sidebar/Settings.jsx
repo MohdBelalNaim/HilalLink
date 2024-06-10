@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeMenu } from "../../redux/settingsSlice";
 import { useNavigate } from "react-router-dom";
 import Minibar from "./Minibar";
+import Home from "../Sidebar/Home"
 
 const Settings = ({notifications}) => {
 
@@ -71,16 +72,16 @@ const Settings = ({notifications}) => {
   const dispatch = useDispatch();
   const current = useSelector((state) => state.settingSlice.current);
   return (
-    <div className="border-r flex">
-      <Minibar notifications={notifications}/>
-      <div className=" p-4">
+    <div className="border-r h-[100vh] flex bg-white">
+      <div className="w-[260px]">
+        <Home notifications={notifications}/>
       </div>
-      <div className="p-4 w-[320px] grid gap-y-4">
+      <div className="w-[300px] pt-5 border-l">
         {menu.map((item) => {
           return (
             <div
               onClick={() => dispatch(changeMenu(item.action))}
-              className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer rounded-md"
+              className="flex items-center py-4 gap-2 px-6 hover:bg-gray-200 cursor-pointer rounded-md"
             >
               {item.icon} {item.title}
             </div>
@@ -88,7 +89,7 @@ const Settings = ({notifications}) => {
         })}
         <div
               onClick={() => logout()}
-              className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer rounded-md"
+              className="flex items-center gap-2 py-4 px-6 hover:bg-gray-200 cursor-pointer rounded-md"
             >
               <BsPower/> Logout
             </div>
