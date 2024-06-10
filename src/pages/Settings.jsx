@@ -23,9 +23,8 @@ const Settings = () => {
     delete: <DeleteAccount />,
   };
   return (
-    <div>
-
-      <div className="w-[min(560px,96%)] mx-auto">{menu[current]}</div>
+    <div className="w-[60%] absolute right-0 px-4">
+      <div className="mx-auto">{menu[current]}</div>
     </div>
   );
 };

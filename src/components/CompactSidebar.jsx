@@ -1,16 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  BsBell,
-  BsBookmark,
-  BsChatDots,
-  BsGear,
-  BsHouse,
-  BsPlus,
-  BsSearch,
-} from "react-icons/bs";
-import { PiMosque } from "react-icons/pi";
-import { LuMedal } from "react-icons/lu";
-import logo from "../assets/images/logo.jpeg";
 import { Link, useLocation} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { showCreate } from "../redux/toggleSlice";
@@ -306,19 +294,21 @@ const CompactSidebar = () => {
       <div
         className={`${
           hidden ? "hidden" : ""
-        } max-sm:hidden fixed h-[100dvh] z-50 flex bg-white pb-4`}
+        } max-sm:hidden fixed h-[100dvh] z-50 flex bg-white pb-4 w-[360px]`}
       >
-        {explore && <Explore notifications={handleNotifications} />}
-        {notifications && <Notifications />}
+        {/* {explore && <Explore notifications={handleNotifications} />} */}
+        {explore && <Home notifications={handleNotifications}/>}
+        {notifications && <Notifications notifications={handleNotifications}/>}
         {home && <Home notifications={handleNotifications} />}
         {settings && <Settings notifications={handleNotifications} />}
-        {search && <Search notifications={handleNotifications} />}
+        {search && <Home notifications={handleNotifications} />}
         {message && <Home notifications={handleNotifications} />}
         {saved && <Home notifications={handleNotifications} />}
         {islam && <Home notifications={handleNotifications} />}
         {myprofile && <Home notifications={handleNotifications} />}
         {profile && <Home notifications={handleNotifications} />}
-        {postDetail && <Minibar notifications={handleNotifications} />}
+        {/* {postDetail && <Minibar notifications={handleNotifications} />} */}
+        {postDetail && <Home notifications={handleNotifications} />}
         {follower && <Home notifications={handleNotifications} />}
         {following && <Home notifications={handleNotifications} />}
       </div>

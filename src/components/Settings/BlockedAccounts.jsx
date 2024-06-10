@@ -10,7 +10,7 @@ const BlockedAccounts = () => {
       <div className="grid gap-y-4 mt-5">
         {"abcdegf".split("").map((item, index) => {
           return (
-            <div className="bg-white rounded-md p-3.5 flex justify-between items-center">
+            <div className="bg-white rounded-md p-3.5 flex justify-between items-center w-[40%]">
               <div className="flex items-center gap-2">
                 <img
                   src="https://picsum.photos/400"

@@ -58,7 +58,7 @@ const DeleteAccount = () => {
           <div>Why do you want to delete your account?</div>
           <select
             {...register("reason")}
-            className="p-2 w-full rounded-md border mt-2"
+            className="p-2 w-[40%] rounded-md border mt-2"
           >
             <option value="Privacy concerns">Privacy concerns</option>
             <option value="Trouble getting started">
@@ -75,7 +75,7 @@ const DeleteAccount = () => {
           <input
             type="password"
             {...register("password", { required: true })}
-            className="p-2 w-full rounded-md border mt-2"
+            className="p-2 w-[40%] rounded-md border mt-2"
           />
           {errors.password && (
             <p className="text-red-500 text-sm mt-3">
