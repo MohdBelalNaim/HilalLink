@@ -312,7 +312,7 @@ const RepostCard = ({ data }) => {
 
               <div className="flex rounded-full justify-center text-sm bg-[#f4f6fc] text-gray-500 items-center gap-2 max-sm:gap-1">
                 <RepostButton data={data} updateRepostCount={updateRepostCount} />
-                <div className="text-xs max-sm:text-[10px]">{repostCount}</div> {/* Display Repost count */}
+                <div className="text-xs max-sm:text-[10px]">{repostCount}</div> 
               </div>
 
 

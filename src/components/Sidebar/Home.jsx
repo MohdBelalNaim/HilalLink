@@ -45,11 +45,12 @@ const Home = ({ notifications }) => {
   return (
     <div className="h-[100dvh] bg-white py-6 pl-4 pr-16 flex flex-col justify-between">
       <div>
+        <Link to="/home">
         <div className="flex items-center gap-3 mb-12">
           <img src={logo} className="size-9 rounded-full" alt="" />
           <span className="font-bold">HilalLink</span>
         </div>
-
+        </Link>
         <div className="">
           <Link to='/home'> 
           <div

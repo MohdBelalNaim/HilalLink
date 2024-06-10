@@ -212,63 +212,63 @@ const CommentCard = ({ id, data, load, check }) => {
           
         </div>
         <div className="flex items-center gap-12 max-sm:gap-8 my-3 mx-10 px-5 max-sm:px-2">
-                {liked ? (
-                  <div
-                    onClick={removeLike}
-                    className="flex text-sm text-gray-500  items-center gap-2 max-sm:gap-1.5"
-                  >
-                    <BsHeartFill size={18} className="text-red-500" />
-                    <div className="text-xs max-sm:text-[11px]">
-                      {likeVal}
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    onClick={addLike}
-                    className="flex text-sm text-gray-500  items-center gap-2 max-sm:gap-1"
-                  >
-                    <BsHeart size={18} />
-                    <div className="text-xs max-sm:text-[11px]">
-                      {likeVal}
-                    </div>
-                  </div>
-                )}
-                <div
-                  className="text-xs text-gray-500 cursor-pointer"
-                  onClick={() => setReply(!reply)}
-                >
-                  Reply
-                </div>
-                <div
-                  className="text-xs text-gray-500 cursor-pointer"
-                  onClick={() => setShowReplies(!showReplies)}
-                >
-                  {showReplies ? "Hide replies" : "See replies"} ({replies.length})
-                </div>
+          {liked ? (
+            <div
+              onClick={removeLike}
+              className="flex text-sm text-gray-500  items-center gap-2 max-sm:gap-1.5"
+            >
+              <BsHeartFill size={18} className="text-red-500" />
+              <div className="text-xs max-sm:text-[11px]">
+                {likeVal}
               </div>
-              {reply && (
-                <div className="mt-3 ml-12 flex gap-3 items-center">
-                  <input
-                    type="text"
-                    placeholder="Reply to this comment"
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    className={`outline-none text-sm px-3 py-1.5 border rounded-full w-full max-sm:text-xs ${replyText ? 'max-sm:w-[86%]' : 'w-full'}`}
-                  />
-                  {replyText && (
-                    <button
-                      className="text-white bg-blue-500 p-2 rounded-full max-sm:absolute max-sm:right-2"
-                      onClick={sendReplyRequest}
-                    >
-                      <FaPaperPlane size={16} />
-                    </button>
-                  )}
-                </div>
-              )}
-              {showReplies &&
-                userdata.map((userData, index) => (
-                  <ReplyCard key={index} reply={replies[index]} user={userData.user} />
-                ))}
+            </div>
+          ) : (
+            <div
+              onClick={addLike}
+              className="flex text-sm text-gray-500  items-center gap-2 max-sm:gap-1"
+            >
+              <BsHeart size={18} />
+              <div className="text-xs max-sm:text-[11px]">
+                {likeVal}
+              </div>
+            </div>
+          )}
+          <div
+            className="text-xs text-gray-500 cursor-pointer"
+            onClick={() => setReply(!reply)}
+          >
+            Reply
+          </div>
+          <div
+            className="text-xs text-gray-500 cursor-pointer"
+            onClick={() => setShowReplies(!showReplies)}
+          >
+            {showReplies ? "Hide replies" : "See replies"} ({replies.length})
+          </div>
+        </div>
+        {reply && (
+          <div className="mt-3 ml-12 flex gap-3 items-center">
+            <input
+              type="text"
+              placeholder="Reply to this comment"
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              className={`outline-none text-sm px-3 py-1.5 border rounded-full w-full max-sm:text-xs ${replyText ? 'max-sm:w-[86%]' : 'w-full'}`}
+            />
+            {replyText && (
+              <button
+                className="text-white bg-blue-500 p-2 rounded-full max-sm:absolute max-sm:right-2"
+                onClick={sendReplyRequest}
+              >
+                <FaPaperPlane size={16} />
+              </button>
+            )}
+          </div>
+        )}
+        {showReplies &&
+          userdata.slice().reverse().map((userData, index) => (
+          <ReplyCard key={index} reply={replies[replies.length - 1 - index]} user={userData.user} />
+        ))}
       </div>
     </div>
   );
