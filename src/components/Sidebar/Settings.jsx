@@ -8,18 +8,17 @@ import {
   BsShield,
   BsTag,
   BsTrash,
-  BsPower
+  BsPower,
 } from "react-icons/bs";
 import { MdBlock } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { changeMenu } from "../../redux/settingsSlice";
 import { useNavigate } from "react-router-dom";
 import Minibar from "./Minibar";
-import Home from "../Sidebar/Home"
+import Home from "../Sidebar/Home";
 
-const Settings = ({notifications}) => {
-
-  const navigate = useNavigate()
+const Settings = ({ notifications }) => {
+  const navigate = useNavigate();
 
   function logout() {
     localStorage.clear();
@@ -74,28 +73,27 @@ const Settings = ({notifications}) => {
   return (
     <div className="border-r h-[100vh] flex bg-white">
       <div className="w-[260px]">
-        <Home notifications={notifications}/>
+        <Home notifications={notifications} />
       </div>
       <div className="w-[300px] pt-5 border-l">
         {menu.map((item) => {
           return (
             <div
               onClick={() => dispatch(changeMenu(item.action))}
-              className="flex items-center py-4 gap-2 px-6 hover:bg-gray-200 cursor-pointer rounded-md"
+              className="flex text-sm items-center py-4 gap-2 px-6 hover:bg-gray-200 cursor-pointer rounded-md"
             >
-              {item.icon} {item.title}
+              {item.title}
             </div>
           );
         })}
         <div
-              onClick={() => logout()}
-              className="flex items-center gap-2 py-4 px-6 hover:bg-gray-200 cursor-pointer rounded-md"
-            >
-              <BsPower/> Logout
-            </div>
+          onClick={() => logout()}
+          className="flex text-sm items-center gap-2 py-4 px-6 hover:bg-gray-200 cursor-pointer rounded-md"
+        >
+          Logout
+        </div>
       </div>
     </div>
-
   );
 };
 
