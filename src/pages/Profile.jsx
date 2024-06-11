@@ -19,7 +19,7 @@ import { TailSpin } from "react-loader-spinner";
 import { loginUser } from "@/redux/userSlice";
 import { toast } from "sonner";
 import notify from "../../utils/sendNotification";
-import ConfirmationModal from "./ConfirmationModal";
+import ConfirmationModal from "../modal/ConfirmationModal";
 import { RWebShare } from "react-web-share";
 
 const Profile = () => {

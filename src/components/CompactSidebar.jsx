@@ -35,6 +35,8 @@ const CompactSidebar = () => {
   const[following, setFollowing] = useState(false);
   const[chat, setChat] = useState(false)
   const[allpeople, setAllpeople] = useState(false)
+  const[report, setReport] = useState(false)
+  const[repostMessage, setRepostMessage] =  useState(false)
 
   const fetchUnreadCount = () => {
     fetch(`${base}/notification/count`, {
@@ -96,6 +98,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/explore") {
       setHome(false);
       setExplore(true);
@@ -112,6 +116,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/settings") {
       setHome(false);
       setExplore(false);
@@ -128,6 +134,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/search") {
       setHome(false);
       setExplore(false);
@@ -144,6 +152,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/messages") {
       setHome(false);
       setExplore(false);
@@ -160,6 +170,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname === "/saved") {
       setHome(false);
       setExplore(false);
@@ -176,6 +188,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname === "/islam-section") {
       setHome(false);
       setExplore(false);
@@ -192,6 +206,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname === "/my-profile") {
       setHome(false);
       setExplore(false);
@@ -208,6 +224,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname.startsWith("/profile/")) {
     setHome(false);
     setExplore(false);
@@ -224,6 +242,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/post-details/")) {
     setHome(false);
     setExplore(false);
@@ -240,6 +260,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/followers/")) {
     setHome(false);
     setExplore(false);
@@ -256,6 +278,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/followings/")) {
     setHome(false);
     setExplore(false);
@@ -272,6 +296,8 @@ const CompactSidebar = () => {
     setFollowing(true)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/chat/")) {
     setHome(false);
     setExplore(false);
@@ -288,6 +314,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(true)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname === "/all-people") {
     setHome(false);
     setExplore(false);
@@ -304,6 +332,44 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(true)
+    setReport(false)
+    setRepostMessage(false)
+    }else if (pathname.startsWith("/report-post/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    setReport(true)
+    setRepostMessage(false)
+    }else if (pathname.startsWith("/report-message/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    setReport(false)
+    setRepostMessage(true)
     }else {
       setHome(false);
       setExplore(false);
@@ -319,6 +385,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }
   }, [pathname]);
 
@@ -342,6 +410,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     setUnreadCount(0);
     NotificationRead();
   };
@@ -366,6 +436,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/explore") {
       setHome(false);
       setExplore(true);
@@ -382,6 +454,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/settings") {
       setHome(false);
       setExplore(false);
@@ -398,6 +472,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/search") {
       setHome(false);
       setExplore(false);
@@ -414,6 +490,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     } else if (pathname === "/messages") {
       setHome(false);
       setExplore(false);
@@ -430,6 +508,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname === "/saved") {
       setHome(false);
       setExplore(false);
@@ -446,6 +526,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname === "/islam-section") {
       setHome(false);
       setExplore(false);
@@ -462,6 +544,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname === "/my-profile") {
       setHome(false);
       setExplore(false);
@@ -478,6 +562,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }else if (pathname.startsWith("/profile/")) {
     setHome(false);
     setExplore(false);
@@ -494,6 +580,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/post-details/")) {
     setHome(false);
     setExplore(false);
@@ -510,6 +598,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/followers/")) {
     setHome(false);
     setExplore(false);
@@ -526,6 +616,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/followings/")) {
     setHome(false);
     setExplore(false);
@@ -542,6 +634,8 @@ const CompactSidebar = () => {
     setFollowing(true)
     setChat(false)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname.startsWith("/chat/")) {
     setHome(false);
     setExplore(false);
@@ -558,6 +652,8 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(true)
     setAllpeople(false)
+    setReport(false)
+    setRepostMessage(false)
     }else if (pathname === "/all-people") {
     setHome(false);
     setExplore(false);
@@ -574,6 +670,44 @@ const CompactSidebar = () => {
     setFollowing(false)
     setChat(false)
     setAllpeople(true)
+    setReport(false)
+    setRepostMessage(false)
+    }else if (pathname.startsWith("/report-post/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    setReport(true)
+    setRepostMessage(false)
+    }else if (pathname.startsWith("/report-message/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    setReport(false)
+    setRepostMessage(true)
     }else {
       setHome(false);
       setExplore(false);
@@ -589,6 +723,8 @@ const CompactSidebar = () => {
       setFollowing(false)
       setChat(false)
       setAllpeople(false)
+      setReport(false)
+      setRepostMessage(false)
     }
   }
 
@@ -618,6 +754,8 @@ const CompactSidebar = () => {
         {following && <Home notifications={handleNotifications} />}
         {chat && <Home notifications={handleNotifications} />}
         {allpeople && <Home notifications={handleNotifications} />}
+        {report && <Home notifications={handleNotifications} />}
+        {repostMessage && <Home notifications={handleNotifications} />}
       </div>
     </>
   );

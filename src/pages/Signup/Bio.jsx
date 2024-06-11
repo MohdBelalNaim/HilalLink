@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logo from "../../assets/images/logo.jpeg";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
@@ -7,38 +7,43 @@ import { TailSpin } from "react-loader-spinner";
 import { toast } from "sonner";
 
 const Bio = () => {
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const base = useSelector((state) => state.userSlice.base_url);
+  const [text, setText] = useState("");
+  const editorRef = useRef();
+
+  const handleChange = () => {
+    const newText = editorRef.current.value;
+    if (newText.length <= 280) {
+      setText(newText);
+      setValue("bio", newText); 
+    } else {
+      toast.error("Bio must be 280 characters or less.");
+    }
+  };
 
   useEffect(() => {
     const accessId = localStorage.getItem("accessId");
-    const address= localStorage.getItem("address");
+    const address = localStorage.getItem("address");
     const verification = localStorage.getItem("verification");
     const storedName = localStorage.getItem("name");
-    if(!accessId){
+
+    if (!accessId) {
       navigate("/signup");
-    }
-    if(!address){
+    } else if (!address) {
       navigate("/signup/address");
-    }
-    if(!verification){
+    } else if (!verification) {
       navigate("/signup/verification");
-    }
-    if (storedName) {
+    } else if (storedName) {
       setName(storedName);
     }
   }, [navigate]);
 
-
   const onSubmit = (data) => {
     setLoading(true);
-    const { bio } = data;
     const accessId = localStorage.getItem("accessId");
 
     fetch(`${base}/signup/bio`, {
@@ -46,27 +51,28 @@ const Bio = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...data, accessId: accessId }),
+      body: JSON.stringify({ ...data, accessId }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          localStorage.setItem("bio","1")
+      .then((response) => {
+        setLoading(false);
+        if (response.success) {
+          localStorage.setItem("bio", "1");
           navigate("/signup/photo");
         } else {
-          toast.error(data.error);
-          setLoading(false);
+          toast.error(response.error);
         }
       })
       .catch((error) => {
-        alert(error);
+        setLoading(false);
+        toast.error("Something went wrong. Please try again.");
       });
   };
 
-  const Movetophoto = () =>{
-    localStorage.setItem("bio","1")
+  const skipAndContinue = () => {
+    localStorage.setItem("bio", "1");
     navigate("/signup/photo");
-  }
+  };
 
   return (
     <div className="max-sm:p-2 h-[100dvh]">
@@ -78,9 +84,7 @@ const Bio = () => {
           <div className="text-2xl font-medium max-sm:text-lg text-center">
             Salam {name}
           </div>
-          <div className="text-sm mt-5 max-sm:hidden">
-            Welcome to HilalLink:
-          </div>
+          <div className="text-sm mt-5 max-sm:hidden">Welcome to HilalLink:</div>
           <div className="text-sm mt-1 max-sm:hidden">
             Your Gateway to a Global Muslim Community.
           </div>
@@ -92,21 +96,33 @@ const Bio = () => {
             {...register("bio")}
             rows="6"
             className="border rounded p-2 w-full mt-1"
+            value={text}
+            onChange={handleChange}
+            ref={editorRef}
           ></textarea>
-          
+
+          <div>{text.length}/280</div>
+
           <button
-              disabled={loading}
-              className={`py-2.5 text-sm rounded-full ${
-                loading ? "bg-blue-200" : "bg-primary"
-              } grid place-items-center w-full disabled:cursor-not-allowed`}
-            >
-              {loading ? (
-                <TailSpin height={20} width={20} color="white" />
-              ) : (
-                "Continue"
-              )}
+            type="submit"
+            disabled={loading}
+            className={`py-2.5 text-sm rounded-full ${
+              loading ? "bg-blue-200" : "bg-primary"
+            } grid place-items-center w-full disabled:cursor-not-allowed`}
+          >
+            {loading ? (
+              <TailSpin height={20} width={20} color="white" />
+            ) : (
+              "Continue"
+            )}
           </button>
-          <button onClick={()=>(Movetophoto())}  className="text-center text-sm ">Skip & continue</button>
+          <button
+            type="button"
+            onClick={skipAndContinue}
+            className="text-center text-sm"
+          >
+            Skip & continue
+          </button>
         </div>
       </form>
     </div>
@@ -114,3 +130,4 @@ const Bio = () => {
 };
 
 export default Bio;
+
