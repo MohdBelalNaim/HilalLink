@@ -1,5 +1,4 @@
 import React from "react";
-import CompactSidebar from "../components/CompactSidebar";
 import { useSelector } from "react-redux";
 import AccountPrivacy from "../components/Settings/AccountPrivacy";
 import ChangePassword from "../components/Settings/ChangePassword";
@@ -23,9 +22,12 @@ const Settings = () => {
     delete: <DeleteAccount />,
   };
   return (
-    <div className="w-[60%] absolute right-16 px-4">
+    <>
+    <div className="w-[54%] absolute right-16 px-4">
       <div className="mx-auto">{menu[current]}</div>
     </div>
+    </>
+   
   );
 };
 

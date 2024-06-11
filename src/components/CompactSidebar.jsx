@@ -33,6 +33,8 @@ const CompactSidebar = () => {
   const[postDetail, setPostDetail] = useState(false)
   const[follower, setFollower] = useState(false);
   const[following, setFollowing] = useState(false);
+  const[chat, setChat] = useState(false)
+  const[allpeople, setAllpeople] = useState(false)
 
   const fetchUnreadCount = () => {
     fetch(`${base}/notification/count`, {
@@ -92,6 +94,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     } else if (pathname === "/explore") {
       setHome(false);
       setExplore(true);
@@ -106,6 +110,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     } else if (pathname === "/settings") {
       setHome(false);
       setExplore(false);
@@ -120,6 +126,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     } else if (pathname === "/search") {
       setHome(false);
       setExplore(false);
@@ -134,6 +142,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     } else if (pathname === "/messages") {
       setHome(false);
       setExplore(false);
@@ -148,6 +158,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     }else if (pathname === "/saved") {
       setHome(false);
       setExplore(false);
@@ -162,6 +174,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     }else if (pathname === "/islam-section") {
       setHome(false);
       setExplore(false);
@@ -176,6 +190,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     }else if (pathname === "/my-profile") {
       setHome(false);
       setExplore(false);
@@ -190,6 +206,8 @@ const CompactSidebar = () => {
       setPostDetail(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     }else if (pathname.startsWith("/profile/")) {
     setHome(false);
     setExplore(false);
@@ -204,6 +222,8 @@ const CompactSidebar = () => {
     setPostDetail(false)
     setFollower(false)
     setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
     }else if (pathname.startsWith("/post-details/")) {
     setHome(false);
     setExplore(false);
@@ -218,6 +238,8 @@ const CompactSidebar = () => {
     setPostDetail(true)
     setFollower(false)
     setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
     }else if (pathname.startsWith("/followers/")) {
     setHome(false);
     setExplore(false);
@@ -232,6 +254,8 @@ const CompactSidebar = () => {
     setPostDetail(false)
     setFollower(true)
     setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
     }else if (pathname.startsWith("/followings/")) {
     setHome(false);
     setExplore(false);
@@ -246,6 +270,40 @@ const CompactSidebar = () => {
     setPostDetail(false)
     setFollower(false)
     setFollowing(true)
+    setChat(false)
+    setAllpeople(false)
+    }else if (pathname.startsWith("/chat/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(true)
+    setAllpeople(false)
+    }else if (pathname === "/all-people") {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(true)
     }else {
       setHome(false);
       setExplore(false);
@@ -259,6 +317,8 @@ const CompactSidebar = () => {
       setProfile(false)
       setFollower(false)
       setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
     }
   }, [pathname]);
 
@@ -280,12 +340,257 @@ const CompactSidebar = () => {
     setPostDetail(false)
     setFollower(false)
     setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
     setUnreadCount(0);
     NotificationRead();
   };
 
   const createPost = useSelector((state) => state.toggleSlice.createPost);
   const user = useSelector((state) => state.userSlice.user);
+
+  const onclose = () => {
+     if (pathname === "/home") {
+      setHome(true);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(false)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    } else if (pathname === "/explore") {
+      setHome(false);
+      setExplore(true);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(false)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    } else if (pathname === "/settings") {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(true);
+      setMessage(false)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    } else if (pathname === "/search") {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(true);
+      setSettings(false);
+      setMessage(false)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    } else if (pathname === "/messages") {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(true)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    }else if (pathname === "/saved") {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(false)
+      setSaved(true)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    }else if (pathname === "/islam-section") {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(false)
+      setSaved(false)
+      setIslam(true)
+      setMyprofile(false)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    }else if (pathname === "/my-profile") {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(false)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(true)
+      setProfile(false)
+      setPostDetail(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    }else if (pathname.startsWith("/profile/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(true)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    }else if (pathname.startsWith("/post-details/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(true)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    }else if (pathname.startsWith("/followers/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(true)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(false)
+    }else if (pathname.startsWith("/followings/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(true)
+    setChat(false)
+    setAllpeople(false)
+    }else if (pathname.startsWith("/chat/")) {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(true)
+    setAllpeople(false)
+    }else if (pathname === "/all-people") {
+    setHome(false);
+    setExplore(false);
+    setNotifications(false);
+    setSearch(false);
+    setSettings(false);
+    setMessage(false);
+    setSaved(false);
+    setIslam(false);
+    setMyprofile(false);
+    setProfile(false)
+    setPostDetail(false)
+    setFollower(false)
+    setFollowing(false)
+    setChat(false)
+    setAllpeople(true)
+    }else {
+      setHome(false);
+      setExplore(false);
+      setNotifications(false);
+      setSearch(false);
+      setSettings(false);
+      setMessage(false)
+      setSaved(false)
+      setIslam(false)
+      setMyprofile(false)
+      setProfile(false)
+      setFollower(false)
+      setFollowing(false)
+      setChat(false)
+      setAllpeople(false)
+    }
+  }
 
   return (
     <>
@@ -298,7 +603,7 @@ const CompactSidebar = () => {
       >
         {/* {explore && <Explore notifications={handleNotifications} />} */}
         {explore && <Home notifications={handleNotifications}/>}
-        {notifications && <Notifications notifications={handleNotifications}/>}
+        {notifications && <Notifications notifications={handleNotifications} onClose={onclose}/>}
         {home && <Home notifications={handleNotifications} />}
         {settings && <Settings notifications={handleNotifications} />}
         {search && <Home notifications={handleNotifications} />}
@@ -311,6 +616,8 @@ const CompactSidebar = () => {
         {postDetail && <Home notifications={handleNotifications} />}
         {follower && <Home notifications={handleNotifications} />}
         {following && <Home notifications={handleNotifications} />}
+        {chat && <Home notifications={handleNotifications} />}
+        {allpeople && <Home notifications={handleNotifications} />}
       </div>
     </>
   );
