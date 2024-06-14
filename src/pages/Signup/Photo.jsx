@@ -5,14 +5,18 @@ import logo from "../../assets/images/logo.jpeg";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { TailSpin } from "react-loader-spinner";
+import EditCoverMedia from "@/EditPhoto/EditCoverMedia";
+import EditProfileMedia from "@/EditPhoto/EditProfileMedia";
 
 const Photo = () => {
-  const [cover, setCover] = useState(null);
-  const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const base = useSelector((state) => state.userSlice.base_url);
+  const [profileMedia, setProfileMedia] = useState(false);
+  const [coverMedia, setCoverMedia] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const [coverPhoto, setCoverPhoto] = useState("");
 
   useEffect(() => {
     const accessId = localStorage.getItem("accessId");
@@ -43,8 +47,8 @@ const Photo = () => {
   
       // Upload cover image
       const coverFormData = new FormData();
-      if (cover) {
-        coverFormData.append("file", cover);
+      if (coverPhoto) {
+        coverFormData.append("file", coverPhoto);
         coverFormData.append("upload_preset", "j6wloen4");
   
         const coverResponse = await fetch(
@@ -65,8 +69,8 @@ const Photo = () => {
   
       // Upload profile image
       const profileFormData = new FormData();
-      if (profile) {
-        profileFormData.append("file", profile);
+      if (profilePhoto) {
+        profileFormData.append("file", profilePhoto);
         profileFormData.append("upload_preset", "j6wloen4");
   
         const profileResponse = await fetch(
@@ -100,16 +104,6 @@ const Photo = () => {
       setLoading(false);
     }
   };
-  
-  
-
-  const handleCoverChange = (e) => {
-    setCover(e.target.files[0]);
-  };
-
-  const handleProfileChange = (e) => {
-    setProfile(e.target.files[0]);
-  };
 
   const saveUrlsToDatabase = async ({ coverUrl, profileUrl }) => {
     try {
@@ -138,8 +132,45 @@ const Photo = () => {
     navigate("/signup/final");
   }
 
+   const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePhoto(file);
+    setProfileMedia(true);
+  };
+
+  const handleCoverPhotoChange = (e) => {
+    const file = e.target.files[0];
+    setCoverPhoto(file);
+    setCoverMedia(true);
+  }
+
+    const handleSaveProfilePhoto = (croppedImage) => {
+    setProfilePhoto(croppedImage); 
+    setProfileMedia(false); 
+  };
+
+  const handleSaveCoverPhoto = (croppedImage) => {
+    setCoverPhoto(croppedImage); 
+    setCoverMedia(false); 
+  }
+
   return (
     <div className="h-[100dvh]">
+      {profileMedia && (
+        <EditProfileMedia
+          handler={setProfileMedia}
+          photo={profilePhoto}
+          onSave={handleSaveProfilePhoto}
+        />
+      )}
+      {coverMedia && (
+        <EditCoverMedia 
+          handler={setCoverMedia}
+          photo={coverPhoto}
+          onSave={handleSaveCoverPhoto}
+        />
+      )
+      }
       <div className="flex flex-col items-center justify-center py-8">
         <img src={logo} className="size-10 rounded-full" alt="" />
       </div>
@@ -153,10 +184,10 @@ const Photo = () => {
       </div>
       <div className="w-[min(460px,98%)] overflow-hidden border rounded-md mx-auto max-sm:p-4">
         <div className="h-[200px] bg-gray-200  relative flex justify-center">
-          {cover && (
+          {coverPhoto && (
             <img
-              key={cover.name}
-              src={URL.createObjectURL(cover)}
+              key={coverPhoto?.name}
+              src={URL.createObjectURL(coverPhoto)}
               className="w-full h-[200px] absolute object-cover "
             />
           )}
@@ -165,7 +196,7 @@ const Photo = () => {
               size={32}
               className="cursor-pointer primary mt-[60px]"
             />
-            <input type="file" id="cover" hidden onChange={handleCoverChange} />
+            <input type="file" id="cover" hidden onChange={handleCoverPhotoChange} />
           </label>
           <div className="absolute -bottom-10">
             <div className="inset-0 backdrop-brightness-50 absolute rounded-full grid place-items-center">
@@ -175,14 +206,14 @@ const Photo = () => {
                   type="file"
                   id="profile"
                   hidden
-                  onChange={handleProfileChange}
+                  onChange={handleProfilePhotoChange}
                 />
               </label>
             </div>
-            {profile ? (
+            {profilePhoto ? (
               <img
-                key={profile.name}
-                src={URL.createObjectURL(profile)}
+                key={profilePhoto?.name}
+                src={URL.createObjectURL(profilePhoto)}
                 className="size-24 rounded-full"
               />
             ) : (
@@ -193,9 +224,9 @@ const Photo = () => {
 
         <div className="bg-white p-4 text-center pt-[80px]">
           <button
-            disabled={!cover && !profile || loading}
+            disabled={!coverPhoto && !profilePhoto || loading}
             className={`py-2.5 text-sm rounded-full ${
-              (!cover && !profile) || loading ? "bg-gray-300" : "bg-primary"
+              (!coverPhoto && !profilePhoto) || loading ? "bg-gray-300" : "bg-primary"
             } grid place-items-center w-full disabled:cursor-not-allowed`}
             onClick={sendDataToCloudinary}
           >

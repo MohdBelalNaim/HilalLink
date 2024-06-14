@@ -1,9 +1,6 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import React, { useRef, useState} from "react";
 import {
-  BsAspectRatio,
   BsImage,
-  BsSquare,
-  BsThreeDots,
   BsX,
   BsGlobe,
 } from "react-icons/bs";
@@ -11,33 +8,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { hideCreate } from "../redux/toggleSlice";
 import { useLockBodyScroll } from "@uidotdev/usehooks";
 import avatar from "../assets/images/avatar.jpeg";
-import Cropper from "react-easy-crop";
-import getCroppedImg from "../../utils/crop";
 import { MDXEditor } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
-
+import EditProfileMedia from "@/EditPhoto/EditProfileMedia";
 import { toast } from "sonner";
-import { LuRectangleHorizontal, LuRectangleVertical } from "react-icons/lu";
 import { TailSpin } from "react-loader-spinner";
 
 const CreatePost = () => {
   const dispatch = useDispatch();
-  const [uploadImage, setUploadImage] = useState(null);
   const [text, setText] = useState("");
   const user = useSelector((state) => state.userSlice.user);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [croppedImage, setCroppedImage] = useState(null);
-  const [aspect, setAspect] = useState(1 / 1);
-  const [aspectMenu, setAspectMenu] = useState(false);
   const [loading, setLoading] = useState(false);
   const editorRef = useRef("");
-
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const [profileMedia, setProfileMedia] = useState(false);
 
     const handleChange = () => {
     if (editorRef.current) {
@@ -50,18 +34,6 @@ const CreatePost = () => {
     }
   };
 
-  async function handleImage() {
-    try {
-      const { file } = await getCroppedImg(
-        URL.createObjectURL(uploadImage),
-        croppedAreaPixels,
-        rotation
-      );
-      return file;
-    } catch (e) {
-      console.error(e);
-    }
-  }
   const saveImage = async (imgFile) => {
     const data = new FormData();
     data.append("file", imgFile);
@@ -83,6 +55,7 @@ const CreatePost = () => {
       console.log(error);
     }
   };
+
   async function savePost(img) {
     setLoading(true);
     await fetch(`${base}/post/create`, {
@@ -93,8 +66,8 @@ const CreatePost = () => {
       },
       body: JSON.stringify({
         text,
-        post_type: uploadImage ? "Media" : "Text",
-        asset_url: uploadImage ? await saveImage(img) : "",
+        post_type: profilePhoto ? "Media" : "Text",
+        asset_url: profilePhoto ? await saveImage(img) : "",
       }),
     })
       .then((res) => res.json())
@@ -109,14 +82,14 @@ const CreatePost = () => {
         }
       });
   }
+
   async function handleSave() {
-    if (text.length == 0 && uploadImage == null) {
+    if (text.length == 0 && profilePhoto == null) {
       toast.error("Post cannot be empty!");
       return;
     }
-    if (uploadImage) {
-      const imageFile = await handleImage();
-      await savePost(imageFile);
+    if (profilePhoto) {
+      await savePost(profilePhoto);
     } else {
       await savePost("");
     }
@@ -125,13 +98,17 @@ const CreatePost = () => {
   const base = useSelector((state) => state.userSlice.base_url);
 
   useLockBodyScroll();
-  const cropperRef = useRef();
 
-  function changeAspectRatio(newaspect) {
-    setAspect(newaspect);
-    setAspectMenu(false);
-  }
+  const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePhoto(file);
+    setProfileMedia(true);
+  };
 
+  const handleSaveProfilePhoto = (croppedImage) => {
+    setProfilePhoto(croppedImage); 
+    setProfileMedia(false); 
+  };
   
 
   return (
@@ -161,16 +138,6 @@ const CreatePost = () => {
             </div>
           </div>
 
-          {/* <div className="flex items-center gap-3">
-            <img src={user?.profile_url ? user.profile_url : avatar} className="size-16 rounded-full" alt=""/>
-            <div className="font-medium max-sm:text-sm">
-              {user?.name} 
-              <span className="text-xs mt-1 flex bg-blue-100 text-blue-500 py-1 px-3 rounded-full max-sm:text-[10px] max-sm:px-2">
-                <BsGlobe className="mr-1 mt-0.5"/> Public
-              </span>
-            </div>
-          </div> */}
-
           <div className="mt-3 h-20 overflow-auto ">
             <div className="h-full overflow-auto">
               <MDXEditor
@@ -183,62 +150,30 @@ const CreatePost = () => {
               />
             </div>
           </div>
-
-
-
-          <div className={`${uploadImage && "h-[300px]"} relative mt-3`}>
-            {uploadImage && (
-              <>
-                <button
-                  className="absolute z-50 bg-white rounded-full top-2 left-2 cursor-pointer"
-                  onClick={() => setUploadImage("")}
-                >
-                  <BsX size={20} />
-                </button>
-                <div
-                  onClick={() => setAspectMenu(!aspectMenu)}
-                  className="w-max cursor-pointer bg-gray-200 p-2 rounded-full z-50 absolute bottom-2 left-2"
-                >
-                  <BsAspectRatio />
-                </div>
-                {aspectMenu && (
-                  <div className="absolute overflow-hidden bg-white z-50 bottom-11 left-2 rounded overfolow-hidden">
-                    <div
-                      onClick={() => changeAspectRatio(1 / 1)}
-                      className="hover:bg-gray-200 cursor-pointer px-2 border-b w-[80px] py-2 flex items-center justify-between"
-                    >
-                      1:1 <BsSquare size={16} />{" "}
-                    </div>
-                    <div
-                      onClick={() => changeAspectRatio(4 / 5)}
-                      className="hover:bg-gray-200 cursor-pointer px-2 border-b w-[80px] py-2 flex items-center justify-between"
-                    >
-                      4:5 <LuRectangleVertical size={20} />
-                    </div>
-                    <div
-                      onClick={() => changeAspectRatio(16 / 9)}
-                      className="hover:bg-gray-200 cursor-pointer px-2 border-b w-[80px] py-2 flex items-center justify-between"
-                    >
-                      16:9 <LuRectangleHorizontal size={20} />
-                    </div>
-                  </div>
-                )}
-                <Cropper
-                  image={URL.createObjectURL(uploadImage)}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={aspect}
-                  onCropChange={setCrop}
-                  onCropComplete={onCropComplete}
-                  onZoomChange={setZoom}
-                />
-              </>
-            )}
+          
+          <div className={`${profilePhoto && "h-[300px]"} relative mt-3`}>
+            {profilePhoto && (
+            <img
+              key={profilePhoto?.name}
+              src={URL.createObjectURL(profilePhoto)}
+              className="w-full h-[300px] absolute object-cover "
+            />
+          )}
           </div>
+
+          {profileMedia && (
+        <EditProfileMedia
+          handler={setProfileMedia}
+          photo={profilePhoto}
+          onSave={handleSaveProfilePhoto}
+        />
+      )}
+      
+      
 
           
          <div className="relative my-3 max-sm:text-sm text-gray-400">
-          <div className={`absolute  ${uploadImage ? 'right-0' : 'left-2' }`}>
+          <div className={`absolute  ${profilePhoto ? 'right-0' : 'left-2' }`}>
             {text.length}/280
           </div>
          </div>
@@ -255,14 +190,13 @@ const CreatePost = () => {
                 id="post"
                 hidden
                 accept="image/*"
-                onChange={(e) => setUploadImage(e.target.files[0])}
+                onChange={handleProfilePhotoChange}
               />
             </label>
           </div>
           <div className="flex items-center gap-4">
             {loading ? (
               <button
-                onClick={savePost}
                 className="bg-primary text-sm w-max py-1 rounded-full max-sm:text-xs opacity-55 cursor-not-allowed"
                 disabled
               >

@@ -1,6 +1,4 @@
-import { loginUser } from "@/redux/userSlice";
-import { useLockBodyScroll } from "@uidotdev/usehooks";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { BsCamera, BsX } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +6,10 @@ import { toast } from "sonner";
 import avatar from "../../assets/images/avatar.jpeg";
 import { TailSpin } from "react-loader-spinner";
 import categories from "../../../utils/userCategories";
+import { loginUser } from "@/redux/userSlice";
+import { useLockBodyScroll } from "@uidotdev/usehooks";
+import EditCoverMedia from "@/EditPhoto/EditCoverMedia";
+import EditProfileMedia from "@/EditPhoto/EditProfileMedia";
 
 const EditProfile = ({ handler }) => {
   const { handleSubmit, register, setValue } = useForm();
@@ -16,56 +18,11 @@ const EditProfile = ({ handler }) => {
   const base = useSelector((state) => state.userSlice.base_url);
   const [profilePhoto, setProfilePhoto] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
-
+  const [profileMedia, setProfileMedia] = useState(false);
+  const [coverMedia, setCoverMedia] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const saveCover = async () => {
-    const data = new FormData();
-    data.append("file", coverPhoto);
-    data.append("upload_preset", "hilal_link");
-    data.append("cloud_name", "myimagestorage");
-
-    try {
-      const res = await fetch(
-        "https://api.cloudinary.com/v1_1/myimagestorage/image/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      );
-
-      const cloudData = await res.json();
-      console.log(cloudData.url);
-
-      return cloudData.url;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const saveImage = async () => {
-    const data = new FormData();
-    data.append("file", profilePhoto);
-    data.append("upload_preset", "hilal_link");
-    data.append("cloud_name", "myimagestorage");
-
-    try {
-      const res = await fetch(
-        "https://api.cloudinary.com/v1_1/myimagestorage/image/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      );
-
-      const cloudData = await res.json();
-      console.log(cloudData.url);
-
-      return cloudData.url;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useLockBodyScroll();
 
   useEffect(() => {
     setValue("name", user?.name);
@@ -105,22 +62,101 @@ const EditProfile = ({ handler }) => {
         console.error(error);
         setLoading(false);
       });
-    };
+  };
 
-  useLockBodyScroll();
+  const saveImage = async () => {
+    const data = new FormData();
+    data.append("file", profilePhoto);
+    data.append("upload_preset", "hilal_link");
+    data.append("cloud_name", "myimagestorage");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/myimagestorage/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const cloudData = await res.json();
+      console.log(cloudData.url);
+
+      return cloudData.url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const saveCover = async () => {
+    const data = new FormData();
+    data.append("file", coverPhoto);
+    data.append("upload_preset", "hilal_link");
+    data.append("cloud_name", "myimagestorage");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/myimagestorage/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const cloudData = await res.json();
+      console.log(cloudData.url);
+
+      return cloudData.url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePhoto(file);
+    setProfileMedia(true);
+  };
+
+  const handleCoverPhotoChange = (e) => {
+    const file = e.target.files[0];
+    setCoverPhoto(file);
+    setCoverMedia(true);
+  }
+  
+  const handleSaveProfilePhoto = (croppedImage) => {
+    setProfilePhoto(croppedImage); 
+    setProfileMedia(false); 
+  };
+
+  const handleSaveCoverPhoto = (croppedImage) => {
+    setCoverPhoto(croppedImage); 
+    setCoverMedia(false); 
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      {profileMedia && (
+        <EditProfileMedia
+          handler={setProfileMedia}
+          photo={profilePhoto}
+          onSave={handleSaveProfilePhoto}
+        />
+      )}
+      {coverMedia && (
+        <EditCoverMedia 
+          handler={setCoverMedia}
+          photo={coverPhoto}
+          onSave={handleSaveCoverPhoto}
+        />
+      )
+      }
       <div
         className="w-[min(540px,96%)] h-[95vh] bg-white rounded-md overflow-hidden relative"
         style={{ borderRadius: "10px" }}
       >
         <div className="flex items-center gap-2 p-3 bg-white border-b">
-          <BsX
-            onClick={() => handler(false)}
-            className="cursor-pointer"
-            size={22}
-          />
+          <BsX onClick={() => handler(false)} className="cursor-pointer" size={22} />
           <span>Edit profile</span>
         </div>
         <form
@@ -136,7 +172,7 @@ const EditProfile = ({ handler }) => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setCoverPhoto(e.target.files[0])}
+                  onChange={handleCoverPhotoChange}
                   hidden
                   id="cover"
                 />
@@ -164,23 +200,25 @@ const EditProfile = ({ handler }) => {
                     <BsCamera size={20} />
                   </div>
                 </div>
-                {profilePhoto ? (
+                {
+                  profilePhoto ? (
                   <img
-                    src={URL.createObjectURL(profilePhoto)}
-                    className="w-24 h-24 rounded-full object-cover"
-                    alt=""
-                  />
-                ) : (
-                  <img
-                    src={user?.profile_url || avatar}
-                    className="w-24 h-24 rounded-full object-cover"
-                    alt=""
-                  />
-                )}
+                  src={ URL.createObjectURL(profilePhoto) }
+                  className="w-24 h-24 rounded-full object-cover"
+                  alt=""
+                />
+                  ):(
+                    <img
+                  src={ user?.profile_url || avatar}
+                  className="w-24 h-24 rounded-full object-cover"
+                  alt=""
+                />
+                  )
+                }
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setProfilePhoto(e.target.files[0])}
+                  onChange={handleProfilePhotoChange}
                   hidden
                   id="profile"
                 />
@@ -193,25 +231,18 @@ const EditProfile = ({ handler }) => {
                 className="p-2 border rounded w-full"
                 {...register("name")}
               />
-
-              <select
-                {...register("category")}
-                id=""
-                className="w-full p-2 border rounded"
-              >
-                {categories.map((item) => {
-                  return <option value={item}>{item}</option>;
-                })}
+              <select {...register("category")} className="w-full p-2 border rounded">
+                {categories.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
               </select>
-    
-              <select
-              {...register("gender")} 
-                className="w-full p-2 border rounded">
+              <select {...register("gender")} className="w-full p-2 border rounded">
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Prefer not to say">Prefer not to say</option>
               </select>
-
               <input
                 type="text"
                 placeholder="City"
@@ -240,16 +271,11 @@ const EditProfile = ({ handler }) => {
           </div>
           <div className="p-4 bg-white border-t flex justify-end">
             {loading ? (
-              <button
-                className="bg-black text-white px-3 py-1.5 rounded-full opacity-50 cursor-not-allowed"
-                disabled
-              >
+              <button className="bg-black text-white px-3 py-1.5 rounded-full opacity-50 cursor-not-allowed" disabled>
                 <TailSpin height={16} color="white" />
               </button>
             ) : (
-              <button className="bg-black text-white mb-8 px-3 py-1.5 rounded-full">
-                Save
-              </button>
+              <button className="bg-black text-white mb-8 px-3 py-1.5 rounded-full">Save</button>
             )}
           </div>
         </form>
@@ -259,3 +285,4 @@ const EditProfile = ({ handler }) => {
 };
 
 export default EditProfile;
+
