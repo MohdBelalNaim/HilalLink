@@ -117,6 +117,23 @@ const PostCard = ({ data }) => {
       });
   };
 
+  function deletePost(id) {
+  let confirmation = confirm("Are you sure you want to delete this Post?");
+  if (confirmation) {
+    fetch(`${base}/post/delete/${id}`, {
+      method: "POST",
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) =>{ 
+        toast.success("Post deleted successfully"),
+        setHide(true)
+      })
+    }
+  }
+    
   const copyToClipboard = async () => {
     const textToCopy = `${base}/post-details/${data?._id}`;
     try {
@@ -135,7 +152,7 @@ const PostCard = ({ data }) => {
     <>
       <div className={`mb-2 relative ${hide && "hidden"}`}>
         <div className="relative">
-          {lightbox && (
+        {lightbox && (
         <div className="inset-0 fixed glass z-[999] grid place-items-center">
           <div
             onClick={() => setLightBox(false)}
@@ -148,36 +165,60 @@ const PostCard = ({ data }) => {
             alt=""
             className="h-[500px] w-[500px] max-sm:h-[250px] max-sm:w-[250px] "
           />
-        </div>)}
+        </div>
+        )}
           {options && (
             <div
               ref={menuRef}
               className="bg-white overflow-hidden z-[99] absolute text-sm border shadow rounded-md right-2 top-14"
               style={{ borderRadius: "10px" }}
             >
-              <div
-                onClick={savePost}
-                className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
-              >
-                <BsBookmark /> Save post
-              </div>
-              <div
-                onClick={copyToClipboard}
-                className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
-              >
-                <BsLink /> Copy link
-              </div>
-              <Link to={`/report-post/${data?._id}`}>
-                <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
-                  <BsExclamationCircle /> Report
-                </div>
-              </Link>
-              <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
-                <MdBlock /> Block user
-              </div>
-              <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
-                <BsPerson /> Follow user
-              </div>
+              {data?.user?._id == my?._id ? (
+                <>
+                  <Link to={`/edit/${data?._id}`}>
+                    <div
+                      className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
+                      // onClick={() => editPost(data?._id)}
+                    >
+                      <BsPen /> Edit post
+                    </div>
+                  </Link>
+
+                  <div
+                    className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
+                    onClick={() => deletePost(data?._id)}
+                  >
+                    <BsTrash /> Delete post
+                  </div>
+                  <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
+                    <BsShare /> Share post
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div
+                    onClick={savePost}
+                    className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
+                  >
+                    <BsBookmark /> Save post
+                  </div>
+                  <div
+                    onClick={copyToClipboard}
+                    className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 "
+                  >
+                    <BsLink /> Copy link
+                  </div>
+                  <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
+                    <BsExclamationCircle /> Report
+                  </div>
+                  <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
+                    <MdBlock /> Block user
+                  </div>
+                  <div className="py-1.5 max-sm:text-xs px-3 border-b flex items-center gap-3 cursor-pointer hover:bg-gray-200 ">
+                    <BsPerson /> Follow user
+                  </div>
+                </>
+              )}
 
               <div
                 onClick={() => setOptions(!options)}

@@ -56,6 +56,7 @@ const MyProfile = () => {
     <div className="flex ">
       
       {edit && <EditProfile handler={setEdit} />}
+      
       {load ? (
         <div className="w-[min(560px,100%)] mx-auto bg-blue">
           <div className="relative">
