@@ -45,6 +45,8 @@ import Followings from "./pages/Profile/Followings";
 import ReportPost from "./pages/ReportPost";
 import NewProfile from "./pages/NewProfile";
 import CompactSidebar from "./components/CompactSidebar";
+import ReportMessage from "./pages/ReportMessage";
+import ReportUser from "./pages/ReportUser";
 
 function App() {
   return (
@@ -101,6 +103,8 @@ function App() {
         <Route path="/followings/:id" element={<Followings />} />
 
         <Route path="report-post/:id" element={<ReportPost />} />
+        <Route path="report-message/:id" element={<ReportMessage />} />
+        <Route path="report-user/:id" element={<ReportUser />} />
 
         <Route path="/newprofile/:id" element={<NewProfile />} />
       </Routes>

@@ -5,7 +5,7 @@ import avatar from "../assets/images/avatar.jpeg";
 import { toast } from "sonner";
 import notify from "../../utils/sendNotification";
 import { TailSpin } from "react-loader-spinner";
-import ConfirmationModal from "@/pages/ConfirmationModal";
+import ConfirmationModal from "@/modal/ConfirmationModal";
 
 const PeopleCard = ({ data }) => {
   const base = useSelector((state) => state.userSlice.base_url);
