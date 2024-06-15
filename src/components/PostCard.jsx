@@ -256,7 +256,7 @@ const PostCard = ({ data }) => {
           )}
 
           {data?.asset_url && (
-            <img onClick={() => setLightBox(true)} src={data?.asset_url} className="w-full h-[500px] cursor-pointer" alt="Post asset" />
+            <img onClick={() => setLightBox(true)} src={data?.asset_url} className="w-full h-[500px] max-sm:h-[300px] cursor-pointer" alt="Post asset" />
           )}
 
           <div className="bg-white p-3 card-bottom relative">
