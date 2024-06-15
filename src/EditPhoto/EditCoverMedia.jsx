@@ -1,9 +1,9 @@
 import { useLockBodyScroll } from "@uidotdev/usehooks";
-import React, { useState, useRef, useCallback } from "react";
-import { BsX, BsAspectRatio, BsSquare } from "react-icons/bs";
+import React, { useState, useCallback } from "react";
+import { BsX } from "react-icons/bs";
 import Cropper from "react-easy-crop";
-import { LuRectangleHorizontal, LuRectangleVertical } from "react-icons/lu";
 import getCroppedImg from "../../utils/crop";
+import { TailSpin } from "react-loader-spinner";
 
 const EditCoverMedia = ({ handler, photo, onSave }) => {
   useLockBodyScroll();
@@ -12,22 +12,25 @@ const EditCoverMedia = ({ handler, photo, onSave }) => {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [loading, setLoading] = useState(false); 
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
-  
   const handleSave = async () => {
+    setLoading(true); 
     try {
       const { file } = await getCroppedImg(
         URL.createObjectURL(photo),
         croppedAreaPixels,
         rotation
       );
-      onSave(file); 
+      onSave(file);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);  
     }
   };
 
@@ -61,9 +64,10 @@ const EditCoverMedia = ({ handler, photo, onSave }) => {
         <div className="flex justify-end p-4 border-t">
           <button
             onClick={handleSave}
-            className="bg-primary text-white px-4 py-2 rounded-full"
+            className="bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center"
+            disabled={loading} 
           >
-            Save
+            {loading ? <TailSpin height={20} width={20} color="white" /> : "Save"}  
           </button>
         </div>
       </div>
