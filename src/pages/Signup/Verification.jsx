@@ -28,11 +28,11 @@ const Verification = () => {
       .then((data) => {
         if (data.success) {
           toast.success("OTP sent on your registered email for verification");
-          OtpVerififcationTime()
+          OtpVerififcationTime();
           localStorage.setItem("hashedOTP", data.hash);
+          setOtp("");  // Clear OTP input
         } else {
           toast.error("Error sending OTP");
-          setOtpSent(false);
         }
       })
       .catch((error) => {
@@ -41,19 +41,21 @@ const Verification = () => {
   };
 
   const OtpVerififcationTime = () => {
-    let interval;
-    if (timer > 0) {
-      interval = setInterval(() => {
-        setTimer(prevTimer => prevTimer - 1);
-      }, 1000);
-    }
-    setTimer(15)
-    localStorage.removeItem("hashedOTP");
-
-  }
+    setTimer(20);
+    const interval = setInterval(() => {
+      setTimer(prevTimer => {
+        if (prevTimer > 1) {
+          return prevTimer - 1;
+        } else {
+          clearInterval(interval);
+          localStorage.removeItem("hashedOTP");
+          return 0;
+        }
+      });
+    }, 1000);
+  };
 
   const SignupEmail = (data) => {
-
     fetch(`${base}/signup/signup-email`, {
       method: "POST",
       headers: {
@@ -77,37 +79,32 @@ const Verification = () => {
   useEffect(() => {
     if(!accessId){
       navigate("/signup");
-    }
-    else if (accessId) {
+    } else {
       EmailVerification({ to: accessId });
-    } 
-    else {
-      console.log("Something went wrong");
     }
   }, []);
 
   const onSubmit = (data) => {
     const accessId = localStorage.getItem("accessId");
     setLoading(true);
-    data.otp=otp;
+    data.otp = otp;
     const hashedOtp = localStorage.getItem("hashedOTP");
     fetch(`${base}/signup/verify-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({otp, hashedOtp, accessId }),
+      body: JSON.stringify({ otp, hashedOtp, accessId }),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log("Response from backend:", data);
         setLoading(false);
         if (data.success) {
-          localStorage.setItem("verification","1")
+          localStorage.setItem("verification", "1");
           navigate("/signup/address");
-          SignupEmail({ to: accessId })
-        } 
-        else {
+          SignupEmail({ to: accessId });
+        } else {
           toast.error("OTP verification failed");
         }
       })
@@ -174,24 +171,24 @@ const Verification = () => {
 
           {errors.otp && <span className="text-red-500">This field is required</span>}
           <button
-              disabled={loading}
-              className={`py-2.5 my-7 text-sm rounded-full ${
-                loading ? "bg-blue-200" : "bg-primary"
-              } grid place-items-center w-full disabled:cursor-not-allowed`}
-            >
-              {loading ? (
-                <TailSpin height={20} width={20} color="white" />
-              ) : (
-                "Submit and Continue"
-              )}
+            disabled={loading}
+            className={`py-2.5 my-7 text-sm rounded-full ${
+              loading ? "bg-blue-200" : "bg-primary"
+            } grid place-items-center w-full disabled:cursor-not-allowed`}
+          >
+            {loading ? (
+              <TailSpin height={20} width={20} color="white" />
+            ) : (
+              "Submit and Continue"
+            )}
           </button>
           <div className="text-md text-center text-gray-500 mb-5 mt-5 ml-2">
             Not received your code? 
-          {timer > 0 ? 
-            <span className="ml-1 text-gray-600">{timer}s </span> 
-          : 
-            <span onClick={() => EmailVerification({ to: accessId })} className="primary ml-1">Resend</span>
-          }
+            {timer > 0 ? 
+              <span className="ml-1 text-gray-600">{timer}s </span> 
+            : 
+              <span onClick={() => EmailVerification({ to: accessId })} className="primary ml-1">Resend</span>
+            }
           </div>
         </form>
       </div>
@@ -200,6 +197,7 @@ const Verification = () => {
 };
 
 export default Verification;
+
 
 
 
