@@ -2,42 +2,53 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ActivityCard from "../ActivityCard";
+import { TailSpin } from "react-loader-spinner";
 
 const Activities = () => {
   const [posts, setPosts] = useState([]);
   const base = useSelector((state) => state.userSlice.base_url);
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchPosts();
-  }, [id, base]);
-
-  const fetchPosts = async () => {
-    try {
-      const response = await fetch(`${base}/repost/user-repost/${id}`, {
+ useEffect(() => {
+    function AllUser() {
+      fetch(`${base}/post/other-user-activity/${id}`, {
+        method: "POST",
         headers: {
-          "Authorization": "Bearer " + localStorage.getItem("token"),
+          authorization: "Bearer " + localStorage.getItem("token"),
         },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch posts");
-      }
-      const data = await response.json();
-      setPosts(data.posts);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setPosts(data.found);
+          setLoading(false); 
+        })
+        .catch((error) => {
+          setLoading(false); 
+          toast.error("Failed to fetch user activity");
+        });
     }
-  };
+    AllUser();
+  }, [base]);
 
-  return (
-    <div className={`bg-blue`}>
-      {posts.length ? (
-        posts.map((post, index) => (
-          <ActivityCard key={post._id} index={index} data={post} />
-        ))
+
+   return (
+    <div className="bg-blue">
+      {loading ? (
+        <div className="h-[400px] grid place-items-center">
+          <TailSpin height={52} color="dodgerblue" />
+        </div>
       ) : (
-        <div className="h-[200px] col-span-4 text-center pt-10 font-bold text-gray-500">
-          No Activities 
+        <div>
+          {posts?.length > 0 ? (
+            posts.map((post, index) => (
+              <ActivityCard key={post._id} index={index} data={post} />
+            ))
+          ) : (
+            <div className="h-[200px] col-span-4 text-center pt-10 font-bold text-gray-500">
+              No activities
+            </div>
+          )}
         </div>
       )}
     </div>

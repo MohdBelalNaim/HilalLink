@@ -38,7 +38,9 @@ const Followings = () => {
             ))}
           </div>
         ) : (
-          <p>No followings.</p>
+          <div className="h-[200px] col-span-4 text-center pt-10 font-bold text-gray-500">
+            No followings
+          </div>
         )}
       </div>
     </div>
