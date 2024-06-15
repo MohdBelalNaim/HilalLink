@@ -36,7 +36,9 @@ const Followers = () => {
             ))}
           </div>
         ) : (
-          <p>No followers.</p>
+          <div className="h-[200px] col-span-4 text-center pt-10 font-bold text-gray-500">
+            No followers
+          </div>
         )}
       </div>
     </div>
